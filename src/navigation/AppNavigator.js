@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -15,22 +16,33 @@ const Stack = createNativeStackNavigator();
 
 function BottomTabs() {
   return (
-    <Tab.Navigator screenOptions={({ route }) => ({
+    <Tab.Navigator screenOptions={({ route, navigation }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
-        let IconComponent = MaterialIcons; // Default Icon Component
-
-        if (route.name === 'Activities') {
-          iconName = 'directions-run';
-        } else if (route.name === 'Diet') {
-          iconName = 'fastfood';
-        } else if (route.name === 'Settings') {
-          iconName = 'settings';
-          IconComponent = Feather; // Using Feather for the settings icon
+        switch (route.name) {
+          case 'Activities':
+            iconName = 'directions-run';
+            break;
+          case 'Diet':
+            iconName = 'fastfood';
+            break;
+          case 'Settings':
+            iconName = 'settings';
+            break;
+          default:
+            iconName = 'directions-run';
         }
-
-        return <IconComponent name={iconName} size={size} color={color} />;
+        return <MaterialIcons name={iconName} size={size} color={color} />;
       },
+      headerRight: () => (
+        route.name === 'Activities' || route.name === 'Diet' ?
+          <View style={{ flexDirection: 'row', marginRight: 10 }}>
+            <Feather name="plus" size={24} color="black" style={{ marginRight: 10 }} onPress={() => navigation.navigate(route.name === 'Activities' ? 'AddActivity' : 'AddDiet')} />
+            {route.name === 'Activities' && <MaterialIcons name="directions-run" size={24} color="black" />}
+            {route.name === 'Diet' && <MaterialIcons name="restaurant" size={24} color="black" />}
+          </View>
+          : null
+      ),
     })}>
       <Tab.Screen name="Activities" component={ActivitiesScreen} />
       <Tab.Screen name="Diet" component={DietScreen} />
