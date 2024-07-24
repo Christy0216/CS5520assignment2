@@ -28,9 +28,17 @@ const AddActivityScreen = () => {
       return;
     }
 
-    const isSpecial =
-      (activity === "running" || activity === "weights") &&
-      parseInt(duration) > 60;
+    const newActivity = {
+      id: Date.now(), // Mock ID
+      activity,
+      duration: parseInt(duration),
+      date,
+      isSpecial:
+        (activity === "running" || activity === "weights") &&
+        parseInt(duration) > 60,
+    };
+
+    setActivities((prevActivities) => [...prevActivities, newActivity]);
 
     // Assuming the Firestore code to save the activity would be here
     console.log("Activity Saved:", { activity, duration, date });
@@ -80,7 +88,7 @@ const AddActivityScreen = () => {
             onChange={(event, selectedDate) => {
               const currentDate = selectedDate || date;
               setDate(currentDate);
-              setShowDatePicker(false); // Hide the date picker after date selection
+              setShowDatePicker(false);
             }}
           />
         )}

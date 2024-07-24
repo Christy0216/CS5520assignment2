@@ -1,6 +1,8 @@
+// ActivitiesScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, FlatList } from 'react-native';
+import { View, Button, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import ItemsList from '../components/ItemsList';
 import { Ionicons } from '@expo/vector-icons';
 
 const ActivitiesScreen = () => {
@@ -8,11 +10,10 @@ const ActivitiesScreen = () => {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    // Fetch activities from Firestore or some local data
+    // Fetch activities from local data
     setActivities([
-      { id: 1, title: 'Running', duration: '75 mins', isSpecial: true },
-      { id: 2, title: 'Walking', duration: '30 mins', isSpecial: false },
-      { id: 3, title: 'Weights', duration: '90 mins', isSpecial: true },
+      { id: 1, title: 'Running', duration: '30 mins', isSpecial: false },
+      { id: 2, title: 'Weight Training', duration: '70 mins', isSpecial: true }
     ]);
   }, []);
 
@@ -26,12 +27,7 @@ const ActivitiesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Button title="Add Activity" onPress={() => navigation.navigate('AddActivity')} />
-      <FlatList
-        data={activities}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-      />
+      <ItemsList data={activities} renderItem={renderItem} />
     </View>
   );
 };
