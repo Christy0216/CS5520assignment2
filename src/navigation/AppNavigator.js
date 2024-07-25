@@ -1,15 +1,11 @@
 import React from "react";
-import { Button, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ActivitiesScreen from "../screens/ActivitiesScreen";
-import DietScreen from "../screens/DietScreen";
-import AddActivityScreen from "../screens/AddActivityScreen";
-import AddDietScreen from "../screens/AddDietScreen";
-import EditEntryScreen from "../screens/EditEntryScreen";
+import ListScreen from "../screens/ListScreen";
+import GenericForm from "../components/GenericForm";
 import SettingsScreen from "../screens/SettingsScreen";
-import { MaterialIcons, Feather } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -17,7 +13,7 @@ const Stack = createNativeStackNavigator();
 function BottomTabs() {
   return (
     <Tab.Navigator
-      screenOptions={({ route, navigation }) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           switch (route.name) {
@@ -31,36 +27,17 @@ function BottomTabs() {
               iconName = "settings";
               break;
             default:
-              iconName = "directions-run";
+              iconName = "directions-run"; // Default case, should not normally hit
           }
           return <MaterialIcons name={iconName} size={size} color={color} />;
         },
-        headerRight: () =>
-          route.name === "Activities" || route.name === "Diet" ? (
-            <View style={{ flexDirection: "row", marginRight: 10 }}>
-              <Feather
-                name="plus"
-                size={24}
-                color="black"
-                style={{ marginRight: 10 }}
-                onPress={() =>
-                  navigation.navigate(
-                    route.name === "Activities" ? "AddActivity" : "AddDiet"
-                  )
-                }
-              />
-              {route.name === "Activities" && (
-                <MaterialIcons name="directions-run" size={24} color="black" />
-              )}
-              {route.name === "Diet" && (
-                <MaterialIcons name="restaurant" size={24} color="black" />
-              )}
-            </View>
-          ) : null,
       })}
     >
-      <Tab.Screen name="Activities" component={ActivitiesScreen} />
-      <Tab.Screen name="Diet" component={DietScreen} />
+      <Tab.Screen
+        name="Activities"
+        children={() => <ListScreen type="activities" />}
+      />
+      <Tab.Screen name="Diet" children={() => <ListScreen type="diets" />} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
@@ -75,10 +52,13 @@ function AppNavigator() {
           component={BottomTabs}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="AddActivity" component={AddActivityScreen} />
-        <Stack.Screen name="AddDiet" component={AddDietScreen} />
-        <Stack.Screen name="EditEntry" component={EditEntryScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen
+          name="Form"
+          component={GenericForm}
+          options={({ route }) => ({
+            title: route.params?.title || "Edit Entry",
+          })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

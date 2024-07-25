@@ -1,21 +1,47 @@
-// ItemsList.js
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const ItemsList = ({ data, renderItem }) => {
+const ItemsList = ({ data, type }) => {
+  const navigation = useNavigation();
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => navigation.navigate("EditEntry", { item, type })}
+    >
+      <Text style={styles.title}>{item.title || item.description}</Text>
+      <Text>
+        {type === "activities"
+          ? `${item.duration} mins`
+          : `${item.calories} cal`}
+      </Text>
+    </TouchableOpacity>
+  );
+
   return (
     <FlatList
       data={data}
       renderItem={renderItem}
-      keyExtractor={item => item.id.toString()}
-      contentContainerStyle={styles.list}
+      keyExtractor={(item) => item.id.toString()}
     />
   );
 };
 
 const styles = StyleSheet.create({
-  list: {
-    padding: 20,
+  item: {
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: "lightgray",
+  },
+  title: {
+    flex: 1,
   },
 });
 
