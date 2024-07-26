@@ -11,6 +11,7 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { addOrUpdateEntry, deleteEntry } from "../firebase/firestoreHelper";
 
 const GenericForm = () => {
@@ -86,6 +87,22 @@ const GenericForm = () => {
     handleInputChange("description", value);
   }, [value]);
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        isEditMode && (
+          <Ionicons
+            name="trash-bin"
+            size={24}
+            color="red"
+            style={{ marginRight: 15 }}
+            onPress={handleDelete}
+          />
+        )
+      ),
+    });
+  }, [navigation, isEditMode]);
+
   return (
     <View style={styles.container}>
       <Text>{collectionName === "diets" ? "Description" : "Activity"}:</Text>
@@ -144,8 +161,10 @@ const GenericForm = () => {
           />
         </View>
       )}
-      <Button title="Save" onPress={handleSubmit} />
-      {item?.id && <Button title="Delete" onPress={handleDelete} color="red" />}
+      <View style={styles.buttonContainer}>
+      <Button title="Cancel" onPress={() => navigation.goBack()} color="grey" />
+        <Button title="Save" onPress={handleSubmit} />
+      </View>
     </View>
   );
 };
@@ -168,6 +187,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
   },
 });
 

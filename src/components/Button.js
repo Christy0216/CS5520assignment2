@@ -16,6 +16,7 @@ const Button = ({ title, onPress, color = 'grey' }) => {
 
 const styles = StyleSheet.create({
   button: {
+    flexDirection: 'row',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
