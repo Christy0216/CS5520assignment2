@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -10,10 +10,14 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebaseSetup";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { lightTheme, darkTheme } from "../styles/theme";
+import { ThemeContext } from "../context/ThemeContext";
 
 const ListScreen = ({ type }) => {
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
+  const { theme } = useContext(ThemeContext);
+  const currentTheme = theme === "dark" ? darkTheme : lightTheme;
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, type), (snapshot) => {
@@ -39,9 +43,11 @@ const ListScreen = ({ type }) => {
     >
       <View style={styles.content}>
         {item.isSpecial && <Ionicons name="warning" size={24} color="red" />}
-        <Text style={styles.title}>{item.description || item.title}</Text>
+        <Text style={[styles.title, { color: currentTheme.textColor }]}>
+          {item.description || item.title}
+        </Text>
       </View>
-      <Text>
+      <Text style={{ color: currentTheme.textColor }}>
         {item.calories || item.duration} {type === "diets" ? "cal" : "mins"} -{" "}
         {new Date(item.date).toLocaleDateString()}
       </Text>
@@ -49,7 +55,12 @@ const ListScreen = ({ type }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: currentTheme.backgroundColor },
+      ]}
+    >
       <FlatList
         data={items}
         renderItem={renderItem}

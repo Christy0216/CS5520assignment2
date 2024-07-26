@@ -21,7 +21,7 @@ const GenericForm = () => {
   const [formData, setFormData] = useState({
     description: item?.description || "",
     value: item?.calories || item?.duration || "",
-    date: item?.date ? new Date(item.date) : new Date(), // Convert back to Date object
+    date: item?.date ? new Date(item.date) : new Date(),
     isSpecial: item?.isSpecial || false,
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
