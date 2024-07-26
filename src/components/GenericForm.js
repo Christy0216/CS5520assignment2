@@ -7,41 +7,58 @@ import {
   StyleSheet,
   Alert,
   Switch,
-  ScrollView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import DropDownPicker from "react-native-dropdown-picker";
 import { addOrUpdateEntry, deleteEntry } from "../firebase/firestoreHelper";
 
 const GenericForm = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { item, collectionName } = route.params;
+  const isEditMode = !!item;
 
   const [formData, setFormData] = useState({
     description: item?.description || "",
-    value: item?.calories || item?.duration || "",
+    duration: item?.duration || "",
+    calories: item?.calories || "",
     date: item?.date ? new Date(item.date) : new Date(),
     isSpecial: item?.isSpecial || false,
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // DropDownPicker state
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(formData.description);
+  const [items, setItems] = useState([
+    { label: "Walking", value: "Walking" },
+    { label: "Running", value: "Running" },
+    { label: "Swimming", value: "Swimming" },
+    { label: "Weights", value: "Weights" },
+    { label: "Yoga", value: "Yoga" },
+    { label: "Cycling", value: "Cycling" },
+    { label: "Hiking", value: "Hiking" },
+  ]);
 
   const handleInputChange = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
-    if (!formData.description || !formData.value) {
+    if (!formData.description || (!formData.duration && !formData.calories)) {
       Alert.alert("Error", "Please ensure all fields are filled correctly.");
       return;
     }
 
+    const duration = parseInt(formData.duration);
+    const calories = parseInt(formData.calories);
+
     const entryData = {
-      ...formData,
-      calories:
-        collectionName === "diets" ? parseInt(formData.value) : undefined,
-      duration:
-        collectionName === "activities" ? parseInt(formData.value) : undefined,
+      description: formData.description,
+      date: formData.date,
+      isSpecial: collectionName === "diets" ? calories > 800 : duration > 60,
+      ...(collectionName === "diets" ? { calories } : { duration })
     };
 
     const success = await addOrUpdateEntry(collectionName, entryData, item?.id);
@@ -65,18 +82,39 @@ const GenericForm = () => {
     }
   };
 
+  useEffect(() => {
+    handleInputChange("description", value);
+  }, [value]);
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text>{collectionName === "diets" ? "Description" : "Activity"}:</Text>
-      <TextInput
-        value={formData.description}
-        onChangeText={(text) => handleInputChange("description", text)}
-        style={styles.input}
-      />
+      {collectionName === "diets" ? (
+        <TextInput
+          value={formData.description}
+          onChangeText={(text) => handleInputChange("description", text)}
+          style={styles.input}
+        />
+      ) : (
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          containerStyle={{ height: 40, marginBottom: 20 }}
+          style={{ backgroundColor: 'white' }}
+          dropDownContainerStyle={{ backgroundColor: 'white' }}
+          labelStyle={{ color: 'black' }}
+          placeholder="Select an activity"
+          onChangeValue={(value) => handleInputChange("description", value)}
+        />
+      )}
       <Text>{collectionName === "diets" ? "Calories" : "Duration"}:</Text>
       <TextInput
-        value={String(formData.value)}
-        onChangeText={(text) => handleInputChange("value", text)}
+        value={collectionName === "diets" ? String(formData.calories) : String(formData.duration)}
+        onChangeText={(text) => handleInputChange(collectionName === "diets" ? "calories" : "duration", text)}
         keyboardType="numeric"
         style={styles.input}
       />
@@ -97,16 +135,18 @@ const GenericForm = () => {
           }}
         />
       )}
-      <View style={styles.switchContainer}>
-        <Text>Special Entry:</Text>
-        <Switch
-          value={formData.isSpecial}
-          onValueChange={(value) => handleInputChange("isSpecial", value)}
-        />
-      </View>
+      {isEditMode && (
+        <View style={styles.switchContainer}>
+          <Text>Special Entry:</Text>
+          <Switch
+            value={formData.isSpecial}
+            onValueChange={(value) => handleInputChange("isSpecial", value)}
+          />
+        </View>
+      )}
       <Button title="Save" onPress={handleSubmit} />
       {item?.id && <Button title="Delete" onPress={handleDelete} color="red" />}
-    </ScrollView>
+    </View>
   );
 };
 

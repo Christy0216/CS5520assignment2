@@ -1,30 +1,30 @@
-// Button.js
-import React from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { ThemeContext } from '../context/ThemeContext';
+import { lightTheme, darkTheme } from '../styles/theme';
 
-const Button = ({ onPress, title, style }) => {
+const Button = ({ title, onPress, color = 'grey' }) => {
+  const { theme } = useContext(ThemeContext);
+  const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
+
   return (
-    <Pressable style={({ pressed }) => [styles.button, style, pressed && styles.pressed]} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
-    </Pressable>
+    <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]}>
+      <Text style={[styles.text, { color: currentTheme.textColor }]}>{title}</Text>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center',
+    marginVertical: 10,
   },
   text: {
-    color: 'white',
     fontSize: 16,
-  },
-  pressed: {
-    opacity: 0.75,
+    fontWeight: 'bold',
   },
 });
 

@@ -9,7 +9,6 @@ const SettingsScreen = () => {
   
     return (
       <View style={[styles.container, { backgroundColor: currentTheme.backgroundColor }]}>
-        <Text style={[styles.text, { color: currentTheme.textColor }]}>Current Theme: {theme}</Text>
         <Button title="Toggle Theme" onPress={toggleTheme} />
       </View>
     );

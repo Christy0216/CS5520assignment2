@@ -6,6 +6,7 @@ import ListScreen from "../screens/ListScreen";
 import GenericForm from "../components/GenericForm";
 import SettingsScreen from "../screens/SettingsScreen";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ThemeProvider } from '../context/ThemeContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,9 +36,14 @@ function BottomTabs() {
     >
       <Tab.Screen
         name="Activities"
-        children={() => <ListScreen type="activities" />}
+        children={({ navigation }) => <ListScreen type="activities" navigation={navigation} />}
+        options={{ title: "Activities" }}
       />
-      <Tab.Screen name="Diet" children={() => <ListScreen type="diets" />} />
+      <Tab.Screen
+        name="Diet"
+        children={({ navigation }) => <ListScreen type="diets" navigation={navigation} />}
+        options={{ title: "Diet" }}
+      />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
@@ -45,6 +51,7 @@ function BottomTabs() {
 
 function AppNavigator() {
   return (
+    <ThemeProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -61,6 +68,7 @@ function AppNavigator() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </ThemeProvider>
   );
 }
 

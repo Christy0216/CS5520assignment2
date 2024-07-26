@@ -1,10 +1,16 @@
 export const lightTheme = {
-    backgroundColor: '#fff',
-    textColor: '#333',
+    backgroundColor: 'pink',
+    textColor: 'purple',
+    // itemBackground: 'darkpink',
+    // buttonBackground: 'pink',
+    // buttonTextColor: 'white',
   };
   
   export const darkTheme = {
-    backgroundColor: '#333',
-    textColor: '#fff',
+    backgroundColor: 'grey',
+    textColor: 'black',
+    // itemBackground: 'purple',
+    // buttonBackground: 'darkamagenta',
+    // buttonTextColor: 'yellow',
   };
   
