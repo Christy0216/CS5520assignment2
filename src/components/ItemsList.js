@@ -1,22 +1,17 @@
 import React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { Text, FlatList, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { commonStyles } from "../styles/styles";
 
 const ItemsList = ({ data, type }) => {
   const navigation = useNavigation();
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.item}
+      style={commonStyles.item}
       onPress={() => navigation.navigate("EditEntry", { item, type })}
     >
-      <Text style={styles.title}>{item.title || item.description}</Text>
+      <Text style={commonStyles.title}>{item.title || item.description}</Text>
       <Text>
         {type === "activities"
           ? `${item.duration} mins`
@@ -33,16 +28,5 @@ const ItemsList = ({ data, type }) => {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  item: {
-    padding: 10,
-    marginVertical: 5,
-    backgroundColor: "lightgray",
-  },
-  title: {
-    flex: 1,
-  },
-});
 
 export default ItemsList;

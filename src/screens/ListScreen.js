@@ -39,14 +39,14 @@ const ListScreen = ({ type, navigation }) => {
               <MaterialIcons
                 name={type === "activities" ? "directions-run" : "fastfood"}
                 size={30}
-                color={currentTheme.textColor} // This should reflect the current theme's text color
+                color={currentTheme.textColor}
                 style={{ marginRight: 15 }}
               />
               <TouchableOpacity onPress={() => navigation.navigate("Form", { collectionName: type })}>
                 <Ionicons
                   name="add"
                   size={30}
-                  color={currentTheme.textColor} // This should also reflect the current theme's text color
+                  color={currentTheme.textColor}
                 />
               </TouchableOpacity>
             </View>
