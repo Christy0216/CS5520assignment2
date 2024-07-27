@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, Alert, Keyboard } from "react-native";
+import { View, Text, TextInput, Alert, Keyboard } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -7,6 +7,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { CheckBox } from "react-native-elements";
 import { addOrUpdateEntry, deleteEntry } from "../firebase/firestoreHelper";
 import { commonStyles } from "../styles/styles";
+import Button from "../components/Button";
 
 const GenericForm = () => {
   const navigation = useNavigation();
@@ -35,7 +36,7 @@ const GenericForm = () => {
     { label: "Hiking", value: "Hiking" },
   ]);
 
-  const handleInputChange = async (name, value) => {
+  const handleInputChange = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -47,7 +48,7 @@ const GenericForm = () => {
         [
           {
             text: "No",
-            onPress: () => console.log("No changes made."),
+            onPress: () => console.log("No changes made"),
             style: "cancel",
           },
           {
@@ -72,11 +73,8 @@ const GenericForm = () => {
     const duration = parseInt(formData.duration);
     const calories = parseInt(formData.calories);
 
-    // Automatically determine if the entry should be special
     const automaticIsSpecial =
       collectionName === "diets" ? calories > 800 : duration > 60;
-
-    // If isSpecial has not been manually set by the user, use the automatic determination
     const isSpecial =
       formData.isSpecial !== undefined
         ? formData.isSpecial
@@ -101,33 +99,29 @@ const GenericForm = () => {
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      "Delete", // Title of the alert
-      "Are you sure you want to delete this item?", // Message of the alert
-      [
-        {
-          text: "No",
-          onPress: () => console.log("Deletion cancelled"),
-          style: "cancel",
-        },
-        {
-          text: "Yes",
-          onPress: async () => {
-            if (item?.id) {
-              const success = await deleteEntry(collectionName, item.id);
-              if (success) {
-                Alert.alert("Success", "Entry deleted successfully.");
-                if (navigation.canGoBack()) {
-                  navigation.goBack();
-                }
-              } else {
-                Alert.alert("Error", "Failed to delete entry.");
+    Alert.alert("Delete", "Are you sure you want to delete this item?", [
+      {
+        text: "No",
+        onPress: () => console.log("Deletion cancelled"),
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: async () => {
+          if (item?.id) {
+            const success = await deleteEntry(collectionName, item.id);
+            if (success) {
+              Alert.alert("Success", "Entry deleted successfully.");
+              if (navigation.canGoBack()) {
+                navigation.goBack();
               }
+            } else {
+              Alert.alert("Error", "Failed to delete entry.");
             }
-          },
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   useEffect(() => {
@@ -151,7 +145,9 @@ const GenericForm = () => {
 
   return (
     <View style={commonStyles.container}>
-      <Text>{collectionName === "diets" ? "Description " : "Activity "}*</Text>
+      <Text style={commonStyles.labelText}>
+        {collectionName === "diets" ? "Description" : "Activity"} *
+      </Text>
       {collectionName === "diets" ? (
         <TextInput
           value={formData.description}
@@ -174,13 +170,13 @@ const GenericForm = () => {
           onChangeValue={(value) => handleInputChange("description", value)}
         />
       )}
-      <Text>{collectionName === "diets" ? "Calories " : "Duration "}*</Text>
+      <Text style={commonStyles.labelText}>
+        {collectionName === "diets" ? "Calories" : "Duration"} *
+      </Text>
       <TextInput
-        value={
-          collectionName === "diets"
-            ? String(formData.calories)
-            : String(formData.duration)
-        }
+        value={String(
+          collectionName === "diets" ? formData.calories : formData.duration
+        )}
         onChangeText={(text) =>
           handleInputChange(
             collectionName === "diets" ? "calories" : "duration",
@@ -190,12 +186,12 @@ const GenericForm = () => {
         keyboardType="numeric"
         style={commonStyles.input}
       />
-      <Text>Date *</Text>
+      <Text style={commonStyles.labelText}>Date *</Text>
       <TextInput
         value={formData.date.toDateString()}
         onFocus={() => setShowDatePicker(true)}
-        style={commonStyles.input}
         onBlur={() => Keyboard.dismiss()}
+        style={commonStyles.input}
       />
       {showDatePicker && (
         <DateTimePicker
@@ -209,15 +205,15 @@ const GenericForm = () => {
         />
       )}
       {isEditMode && (
-        <View>
-          <Text>
+        <View style={commonStyles.specialContainer}>
+          <Text style={commonStyles.specialText}>
             This item is marked as special. Select the checkbox if you would
             like to approve it.
           </Text>
           <CheckBox
             checked={formData.isSpecial}
             onPress={() => handleSpecialChange(!formData.isSpecial)}
-            tintColors={{ true: "blue", false: "black" }}
+            containerStyle={commonStyles.checkBoxStyle}
           />
         </View>
       )}
@@ -227,7 +223,7 @@ const GenericForm = () => {
           onPress={() => navigation.goBack()}
           color="grey"
         />
-        <Button title="Save" onPress={handleSubmit} />
+        <Button title="Save" onPress={handleSubmit} color="blue" />
       </View>
     </View>
   );

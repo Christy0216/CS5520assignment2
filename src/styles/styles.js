@@ -6,11 +6,46 @@ export const commonStyles = StyleSheet.create({
     padding: 20,
     backgroundColor: "white",
   },
+  input: {
+    height: 40,
+    borderColor: "black",
+    borderRadius: 5,
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    width: "100%",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  labelText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  specialContainer: {
+    margin: 20,
+    flexDirection: "row",
+  },
+  specialText: {
+    fontSize: 14,
+    color: "black", // Adjust as needed for your design
+    marginBottom: 10,
+  },
+  checkBoxStyle: {
+    backgroundColor: "transparent",
+    borderWidth: 0,
+    padding: 0,
+  },
+  // Additional styles that are part of your app can be added here
   settingContainer: {
     flex: 1,
     padding: 20,
     backgroundColor: "#dcd8e5",
     justifyContent: "center",
+    alignItems: "center",
   },
   item: {
     flexDirection: "row",
@@ -64,18 +99,7 @@ export const commonStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: "black",
-    borderRadius: 5,
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    width: "100%",
-  },
 });
+
+// Export styles as needed elsewhere in your app
+export default commonStyles;

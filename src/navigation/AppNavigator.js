@@ -6,7 +6,7 @@ import ListScreen from "../screens/ListScreen";
 import GenericForm from "../components/GenericForm";
 import SettingsScreen from "../screens/SettingsScreen";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ThemeProvider } from '../context/ThemeContext';
+import { ThemeProvider } from "../context/ThemeContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -36,12 +36,16 @@ function BottomTabs() {
     >
       <Tab.Screen
         name="Activities"
-        children={({ navigation }) => <ListScreen type="activities" navigation={navigation} />}
+        children={({ navigation }) => (
+          <ListScreen type="activities" navigation={navigation} />
+        )}
         options={{ title: "Activities" }}
       />
       <Tab.Screen
         name="Diet"
-        children={({ navigation }) => <ListScreen type="diets" navigation={navigation} />}
+        children={({ navigation }) => (
+          <ListScreen type="diets" navigation={navigation} />
+        )}
         options={{ title: "Diet" }}
       />
       <Tab.Screen name="Settings" component={SettingsScreen} />
@@ -52,22 +56,22 @@ function BottomTabs() {
 function AppNavigator() {
   return (
     <ThemeProvider>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={BottomTabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Form"
-          component={GenericForm}
-          options={({ route }) => ({
-            title: route.params?.title || "Edit Entry",
-          })}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={BottomTabs}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Form"
+            component={GenericForm}
+            options={({ route }) => ({
+              title: route.params?.title || "Edit Entry",
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </ThemeProvider>
   );
 }

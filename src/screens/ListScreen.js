@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebaseSetup";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -34,29 +29,32 @@ const ListScreen = ({ type, navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-        headerRight: () => (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <MaterialIcons
-                name={type === "activities" ? "directions-run" : "fastfood"}
-                size={30}
-                color={currentTheme.textColor}
-                style={{ marginRight: 15 }}
-              />
-              <TouchableOpacity onPress={() => navigation.navigate("Form", { collectionName: type })}>
-                <Ionicons
-                  name="add"
-                  size={30}
-                  color={currentTheme.textColor}
-                />
-              </TouchableOpacity>
-            </View>
-          ),
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <MaterialIcons
+            name={type === "activities" ? "directions-run" : "fastfood"}
+            size={30}
+            color={currentTheme.textColor}
+            style={{ marginRight: 15 }}
+          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Form", { collectionName: type })
+            }
+          >
+            <Ionicons name="add" size={30} color={currentTheme.textColor} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation, currentTheme]);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      style={[commonStyles.item, { backgroundColor: currentTheme.itemBackground }]}
+      style={[
+        commonStyles.item,
+        { backgroundColor: currentTheme.itemBackground },
+      ]}
       onPress={() =>
         navigation.navigate("Form", { item, collectionName: type })
       }
