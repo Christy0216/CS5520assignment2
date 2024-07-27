@@ -1,31 +1,35 @@
-// Button.js
-import React from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native';
+import React, { useContext } from "react";
+import { Pressable, Text, StyleSheet } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
+import { lightTheme, darkTheme } from "../styles/theme";
+import { commonStyles } from "../styles/styles";
 
-const Button = ({ onPress, title, style }) => {
+const Button = ({ title, onPress, color = "lightyellow" }) => {
+  const { theme } = useContext(ThemeContext);
+  const currentTheme = theme === "dark" ? darkTheme : lightTheme;
+
   return (
-    <Pressable style={({ pressed }) => [styles.button, style, pressed && styles.pressed]} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        commonStyles.button,
+        { backgroundColor: pressed ? "#dddddd" : color },
+        { borderColor: currentTheme.textColor },
+      ]}
+      android_ripple={{ color: "#ccc" }}
+    >
+      {({ pressed }) => (
+        <Text
+          style={[
+            commonStyles.text,
+            { color: pressed ? "#333333" : currentTheme.textColor },
+          ]}
+        >
+          {title}
+        </Text>
+      )}
     </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: 'blue',
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: 'white',
-    fontSize: 16,
-  },
-  pressed: {
-    opacity: 0.75,
-  },
-});
 
 export default Button;
